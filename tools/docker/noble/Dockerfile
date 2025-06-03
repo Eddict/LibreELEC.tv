@@ -12,12 +12,12 @@ ENV LANG=en_US.UTF-8 \
     LANGUAGE=en_US:en \
     LC_ALL=en_US.UTF-8
 
-#see GUID is for build time
-ARG GUID
-ENV GUID=${GUID:-1234}
-RUN if [ $(getent passwd ${GUID}) ];then \
+#see USER_UID is for build time
+ARG USER_UID
+ENV USER_UID=${USER_UID:-1234}
+RUN if [ $(getent passwd ${USER_UID}) ];then \
   >&2 echo  "\n****************Warning!!!!*************\n"; \
-  >&2 echo "GUID seems empty!" ;\
+  >&2 echo "USER_UID seems empty!" ;\
   fi
 
 RUN useradd docker -U -G sudo -m -s /bin/bash \
