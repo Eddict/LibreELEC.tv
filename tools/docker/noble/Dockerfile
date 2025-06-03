@@ -12,6 +12,14 @@ ENV LANG=en_US.UTF-8 \
     LANGUAGE=en_US:en \
     LC_ALL=en_US.UTF-8
 
+#see GUID is for build time
+ARG GUID
+ENV GUID=${GUID:-1234}
+RUN if [ $(getent passwd ${GUID}) ];then \
+  >&2 echo  "\n****************Warning!!!!*************\n"; \
+  >&2 echo "GUID seems empty!" ;\
+  fi
+
 RUN useradd docker -U -G sudo -m -s /bin/bash \
  && echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
 
