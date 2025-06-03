@@ -12,16 +12,18 @@ ENV LANG=en_US.UTF-8 \
     LANGUAGE=en_US:en \
     LC_ALL=en_US.UTF-8
 
-#see USER_UID is for build time
+# make sure ubuntu user/group in image does not use the UUID/GUID of the host docker user
+# https://www.kevinguay.com/posts/next-uid-gid/
+RUN retval=$(cat /etc/group /etc/passwd | cut -d ":" -f 3 | grep "^1...$" | sort -n | tail -n 1 | awk '{ print $1+1 }') \
+    && echo "$retval" \
+    && usermod -u $retval ubuntu \
+    && groupmod -g $retval ubuntu
+
 ARG USER_UID
 ENV USER_UID=${USER_UID:-1234}
-RUN if [ $(getent passwd ${USER_UID}) ];then \
-  >&2 echo  "\n****************Warning!!!!*************\n"; \
-  >&2 echo "USER_UID seems empty!" ;\
-  fi
-
-RUN useradd docker -U -G sudo -m -s /bin/bash \
- && echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
+RUN groupadd -g ${USER_UID} docker \
+    && useradd docker -u ${USER_UID} -g ${USER_UID} -G sudo -m -s /bin/bash \
+    && echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
 
 RUN apt-get update
 
