@@ -7,24 +7,30 @@ on:
     branches: [ "master-entw" ]
 
 jobs:
-
   build:
-
     runs-on: github
 #    runs-on: self-hosted
-
     steps:
     -
       name: Build the Docker image
       uses: actions/checkout@v4
-#      run: docker build ./tools/docker/noble --tag libreelec.noble:$(date +%s)
+      with:
+        # Default: ${{ github.repository }}
+        repository: ${{ github.repository }}
+        ref: 'master-entw'
+    -
+      # Add support for more platforms with QEMU (optional)
+      # https://github.com/docker/setup-qemu-action
+      name: Set up QEMU
+      uses: docker/setup-qemu-action@v3
     -
       name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v3
-    -
-      name: Build without push
-      uses: docker/build-push-action@v6
-      with:
-        file: ./tools/docker/noble/Dockerfile
-        push: false
-        # tags: libreelec.noble:$(date +%s)
+#      run: docker build ./tools/docker/noble --tag libreelec.noble:$(date +%s)
+    # -
+    #   name: Build without push
+    #   uses: docker/build-push-action@v6
+    #   with:
+    #     file: tools/docker/noble/Dockerfile
+    #     push: false
+    #     # tags: libreelec.noble:$(date +%s)

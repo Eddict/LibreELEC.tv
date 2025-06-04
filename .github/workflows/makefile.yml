@@ -2,9 +2,9 @@ name: Makefile CI
 
 on:
   push:
-    branches: [ "master-entw" ]
+    branches: [ "DONOTRUN" ]
   pull_request:
-    branches: [ "master-entw" ]
+    branches: [ "DONOTRUN" ]
 
 jobs:
   build:
