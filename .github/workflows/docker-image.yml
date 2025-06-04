@@ -24,6 +24,6 @@ jobs:
       name: Build without push
       uses: docker/build-push-action@v6
       with:
-        file: tools/docker/noble/Dockerfile
+        file: ./tools/docker/noble/Dockerfile
         push: false
-        tags: libreelec.noble:$(date +%s)
+        # tags: libreelec.noble:$(date +%s)
