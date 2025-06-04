@@ -15,4 +15,4 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - name: Build the Docker image
-      run: docker build ./tools/docker/noble --file Dockerfile --tag libreelec.noble:$(date +%s)
+      run: docker build ./tools/docker/noble --tag libreelec.noble:$(date +%s)
