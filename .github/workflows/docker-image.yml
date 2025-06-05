@@ -1,11 +1,14 @@
 name: Docker Image CI
 
+env:
+  branch: 'master-entw'
+
 on:
   workflow_dispatch:
   push:
-    branches: [ "master-entw" ]
+    branches: [ "$branch" ]
   pull_request:
-    branches: [ "master-entw" ]
+    branches: [ "$branch" ]
 
 jobs:
   build:
@@ -30,11 +33,24 @@ jobs:
   #     password: ${{ secrets.DOCKERHUB_TOKEN }}
     - name: Cache dependencies
       uses: actions/cache@v3
+      # with:
+      #   path: /tmp/.buildx-cache
+      #   key: ${{ runner.os }}-multi-buildx-${{ github.sha }}
+      #   restore-keys: |
+      #     ${{ runner.os }}-multi-buildx-
       with:
-        path: /tmp/.buildx-cache
-        key: ${{ runner.os }}-multi-buildx-${{ github.sha }}
+        path: |
+          !.git
+          !.github
+          !.libreelec
+          !build.*
+          !builds
+          !target
+#          path/to/dependencies
+#          some/other/dependencies
+        key: ${{ runner.os }}-$branch-${{ hashFiles('**/lockfiles') }}
         restore-keys: |
-          ${{ runner.os }}-multi-buildx-
+          ${{ runner.os }}-$branch-
     -
       name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v3
