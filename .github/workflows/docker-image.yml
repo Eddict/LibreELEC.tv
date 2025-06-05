@@ -11,6 +11,9 @@ jobs:
   build:
 #    runs-on: github
     runs-on: self-hosted
+    env:
+      DOCKER_BUILDKIT: 1
+      BUILDKIT_PROGRESS: 'plain'
     steps:
     -
       name: Build the Docker image
@@ -38,6 +41,8 @@ jobs:
           [registry."${{ secrets.REGISTRY_FQDN }}:${{ secrets.REGISTRY_PORT }}"]
             http = false
             mirrors = ["localhost:${{ secrets.REGISTRY_PORT }}"]
+        cleanup: false
+        buildkitd-flags: --debug
  #      run: docker build ./tools/docker/noble --tag libreelec.noble:$(date +%s)
     -
       name: Build and push to (local) registry
@@ -46,8 +51,17 @@ jobs:
         file: tools/docker/noble/Dockerfile
         push: true
         tags: libreelec.noble #localhost:5000/name/app:latest
+        build-args: |
+          BUILDKIT_PROGRESS=plain
 #        secrets: |
 #          GIT_AUTH_TOKEN=${{ secrets.GIT_AUTH_TOKEN }}
+        no-cache: false
+        # cache-from: type=gha
+        # cache-to: type=gha,mode=max
+        # cache-from: type=registry,ref=${{vars.DOCKER_HUB_USERNAME}}/${{vars.DOCKER_HUB_IMAGE_NAME}}.1:buildcache
+        # cache-to: type=registry,ref=${{vars.DOCKER_HUB_USERNAME}}/${{vars.DOCKER_HUB_IMAGE_NAME}}.1:buildcache,mode=max
+        cache-from: type=local,src=/tmp/.buildx-cache
+        cache-to: type=local,mode=max,dest=/tmp/.buildx-cache
     - 
       name: Inspect
       run: |
