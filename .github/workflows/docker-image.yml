@@ -18,6 +18,13 @@ jobs:
 #      DOCKER_BUILDKIT: 1
       BUILDKIT_PROGRESS: 'plain'
     steps:
+    # http://man7.org/linux/man-pages/man1/date.1.html
+    - 
+      name: Get Date
+      id: get-date
+      run: |
+        echo "date=$(/bin/date -u "+%Y%m%d")" >> $TODAY
+      shell: bash
     -
       name: Build the Docker image
       uses: actions/checkout@v4
@@ -33,24 +40,24 @@ jobs:
   #     password: ${{ secrets.DOCKERHUB_TOKEN }}
     - name: Cache dependencies
       uses: actions/cache@v3
-      # with:
-      #   path: /tmp/.buildx-cache
-      #   key: ${{ runner.os }}-multi-buildx-${{ github.sha }}
-      #   restore-keys: |
-      #     ${{ runner.os }}-multi-buildx-
       with:
-        path: |
-          !.git
-          !.github
-          !.libreelec
-          !build.*
-          !builds
-          !target
+        path: /tmp/.buildx-cache
+        key: ${{ runner.os }}-multi-buildx-$TODAY #${{ github.sha }}
+        restore-keys: |
+          ${{ runner.os }}-multi-buildx-
+      # with:
+      #   path: |
+      #     !.git
+      #     !.github
+      #     !.libreelec
+      #     !build.*
+      #     !builds
+      #     !target
 #          path/to/dependencies
 #          some/other/dependencies
-        key: ${{ runner.os }}-$branch-${{ hashFiles('**/lockfiles') }}
-        restore-keys: |
-          ${{ runner.os }}-$branch-
+        # key: ${{ runner.os }}-$branch-${{ hashFiles('**/lockfiles') }}
+        # restore-keys: |
+        #   ${{ runner.os }}-$branch-
     -
       name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v3
@@ -70,7 +77,7 @@ jobs:
       with:
         file: tools/docker/noble/Dockerfile
         push: true
-        tags: ${{ secrets.REGISTRY_FQDN }}:${{ secrets.REGISTRY_PORT }}/libreelec.noble #libreelec.noble #localhost:5000/name/app:latest
+        tags: "${{ secrets.REGISTRY_FQDN }}:${{ secrets.REGISTRY_PORT }}/libreelec.noble" #libreelec.noble #localhost:5000/name/app:latest
         build-args: |
           BUILDKIT_PROGRESS=plain
 #        secrets: |
