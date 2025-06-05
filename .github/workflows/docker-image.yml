@@ -53,8 +53,8 @@ jobs:
       uses: docker/build-push-action@v6
       with:
         file: tools/docker/noble/Dockerfile
-        push: false
-        tags: libreelec.noble #localhost:5000/name/app:latest
+        push: true
+        tags: ${{ secrets.REGISTRY_FQDN }}:${{ secrets.REGISTRY_PORT }}/libreelec.noble #libreelec.noble #localhost:5000/name/app:latest
         build-args: |
           BUILDKIT_PROGRESS=plain
 #        secrets: |
