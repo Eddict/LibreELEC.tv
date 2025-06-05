@@ -23,7 +23,7 @@ jobs:
       name: Get Date
       id: get-date
       run: |
-        echo "date=$(/bin/date -u "+%Y%m%d")" >> $TODAY
+        echo "date=$(/bin/date -u "+%Y%m%d")" >> $GITHUB_OUTPUT
       shell: bash
     -
       name: Build the Docker image
@@ -42,7 +42,7 @@ jobs:
       uses: actions/cache@v3
       with:
         path: /tmp/.buildx-cache
-        key: ${{ runner.os }}-multi-buildx-$TODAY #${{ github.sha }}
+        key: ${{ runner.os }}-multi-buildx-${{ steps.get-date.outputs.date }} #${{ github.sha }}
         restore-keys: |
           ${{ runner.os }}-multi-buildx-
       # with:
