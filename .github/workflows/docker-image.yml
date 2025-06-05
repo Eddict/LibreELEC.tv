@@ -1,14 +1,14 @@
 name: Docker Image CI
 
 env:
-  branch: 'master-entw'
+  branch: "master-entw"
 
 on:
   workflow_dispatch:
   push:
-    branches: [ "$branch" ]
+    branches: [ "master-entw" ]
   pull_request:
-    branches: [ "$branch" ]
+    branches: [ "master-entw" ]
 
 jobs:
   build:
