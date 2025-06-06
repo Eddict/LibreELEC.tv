@@ -12,6 +12,11 @@ ENV LANG=en_US.UTF-8 \
     LANGUAGE=en_US:en \
     LC_ALL=en_US.UTF-8
 
+RUN retval=$(cat /etc/group) \
+    && echo "$retval"
+RUN retval=$(cat /etc/passwd) \
+    && echo "$retval"
+
 # make sure ubuntu user/group in image does not use the UUID/GUID of the host docker user
 # https://www.kevinguay.com/posts/next-uid-gid/
 RUN retval=$(cat /etc/group /etc/passwd | cut -d ":" -f 3 | grep "^1...$" | sort -n | tail -n 1 | awk '{ print $1+1 }') \
