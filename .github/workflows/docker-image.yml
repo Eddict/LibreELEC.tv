@@ -88,7 +88,6 @@ jobs:
     - 
       name: Build LibreELEC image
       run: |
-        chown -R docker:docker $PWD && \
         docker login --username ${{ vars.DOCKERHUB_USERNAME }} --password ${{ secrets.DOCKERHUB_TOKEN }} && \
         docker run --rm \
           --log-driver local \
