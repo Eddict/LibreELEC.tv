@@ -91,7 +91,7 @@ jobs:
         docker login --username ${{ vars.DOCKERHUB_USERNAME }} --password ${{ secrets.DOCKERHUB_TOKEN }} && \
         docker run --rm \
           --log-driver local \
-          --name buildLibreELEC.noble \
+          --name "buildLibreELEC.noble" \
           -v $PWD:/build \
           -w /build \
           -e MTIMMEDIATE=yes \
@@ -101,7 +101,7 @@ jobs:
           -e PROJECT=RPi \
           -e DEVICE=RPi4 \
           -e ARCH=aarch64 \
-          libreelec.noble make image
+          "${{ secrets.REGISTRY_FQDN }}/libreelec.noble make image"
 #          "${{ secrets.REGISTRY_FQDN }}/libreelec.noble" make image
 #docker run --log-driver journald --name buildLibreELEC.noble -v $PWD:/build -w /build -it -e MTIMMEDIATE=yes -e MTDEBUG=no -e MTVERBOSE=no -e MTPROGRESS=yes -e PROJECT=RPi -e DEVICE=RPi4 -e ARCH=aarch64 libreelec.noble make image
 
