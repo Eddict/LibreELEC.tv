@@ -87,8 +87,8 @@ jobs:
         build-args: |
           USER_UID=${{ steps.get-docker-guid.outputs.docker-guid }}
         no-cache: false
-        # cache-from: type=registry,ref=${{vars.DOCKER_HUB_USERNAME}}/${{vars.DOCKER_HUB_IMAGE_NAME}}.1:buildcache
-        # cache-to: type=registry,ref=${{vars.DOCKER_HUB_USERNAME}}/${{vars.DOCKER_HUB_IMAGE_NAME}}.1:buildcache,mode=max
+        # cache-from: type=registry,ref=${{ vars.DOCKER_HUB_USERNAME }}/${{ vars.DOCKER_HUB_IMAGE_NAME }}.1:buildcache
+        # cache-to: type=registry,ref=${{ vars.DOCKER_HUB_USERNAME }}/${{ vars.DOCKER_HUB_IMAGE_NAME }}.1:buildcache,mode=max
         cache-from: type=local,src=/tmp/.buildx-cache
         cache-to: type=local,mode=max,dest=/tmp/.buildx-cache
 
