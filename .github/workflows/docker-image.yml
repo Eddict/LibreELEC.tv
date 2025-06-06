@@ -70,15 +70,14 @@ jobs:
       name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v3
       with:
+        # https://github.com/moby/buildkit/blob/master/docs/buildkitd.toml.md
         buildkitd-config-inline: |
-          # https://github.com/moby/buildkit/blob/master/docs/buildkitd.toml.md
           debug = true
           trace = false
-
           [registry."${{ secrets.REGISTRY_FQDN }}"]
             http = false
             insecure = false
-#            mirrors = ["localhost"]
+            mirrors = ["localhost"]
         cleanup: false
         buildkitd-flags: |
           --progress=plain
@@ -117,8 +116,6 @@ jobs:
           -e DEVICE=RPi4 \
           -e ARCH=aarch64 \
           "${{ secrets.REGISTRY_FQDN }}/libreelec.noble" make image
-#          "${{ secrets.REGISTRY_FQDN }}/libreelec.noble" make image
-#docker run --log-driver journald --name buildLibreELEC.noble -v $PWD:/build -w /build -it -e MTIMMEDIATE=yes -e MTDEBUG=no -e MTVERBOSE=no -e MTPROGRESS=yes -e PROJECT=RPi -e DEVICE=RPi4 -e ARCH=aarch64 libreelec.noble make image
 
     - 
       name: Build and push
