@@ -11,8 +11,8 @@ jobs:
   build:
 #    runs-on: github
     runs-on: self-hosted
-    # env:
-    #   BUILDKIT_PROGRESS: 'plain'
+    env:
+      BUILDKIT_PROGRESS: 'plain'
     steps:
     - 
       name: Get Date
@@ -69,13 +69,13 @@ jobs:
       with:
         # https://github.com/moby/buildkit/blob/master/docs/buildkitd.toml.md
         buildkitd-config-inline: |
+          debug = true
           [registry."${{ secrets.REGISTRY_FQDN }}"]
             http = false
             mirrors = ["localhost"]
         cleanup: true
-        buildkitd-flags: |
-          --debug
-          --progress=plain
+        # buildkitd-flags: |
+        #   --debug
 
     -
       name: Build and export to (local) registry
