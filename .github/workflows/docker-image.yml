@@ -24,6 +24,13 @@ jobs:
         echo "date=$(/bin/date -u "+%Y%m%d")" >> $GITHUB_OUTPUT
       shell: bash
 
+    - 
+      name: Get docker guid
+      id: get-docker-guid
+      run: |
+        echo "docker-guid=$(id -u docker)" >> $GITHUB_OUTPUT
+      shell: bash
+
     -
       name: Build the Docker image
       uses: actions/checkout@v4
@@ -78,7 +85,7 @@ jobs:
         load: true
         tags: "${{ secrets.REGISTRY_FQDN }}/libreelec.noble"
         build-args: |
-          BUILDKIT_PROGRESS=plain
+          USER_UID=${{ steps.get-docker-guid.outputs.docker-guid }}
         no-cache: false
         # cache-from: type=registry,ref=${{vars.DOCKER_HUB_USERNAME}}/${{vars.DOCKER_HUB_IMAGE_NAME}}.1:buildcache
         # cache-to: type=registry,ref=${{vars.DOCKER_HUB_USERNAME}}/${{vars.DOCKER_HUB_IMAGE_NAME}}.1:buildcache,mode=max
