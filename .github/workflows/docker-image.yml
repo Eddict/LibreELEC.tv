@@ -74,8 +74,8 @@ jobs:
             http = false
             mirrors = ["localhost"]
         cleanup: true
-        # buildkitd-flags: |
-        #   --debug
+        buildkitd-flags: |
+          --progress "plain"
 
     -
       name: Build and export to (local) registry
