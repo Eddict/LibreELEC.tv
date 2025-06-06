@@ -22,7 +22,7 @@ RUN retval=$(cat /etc/group /etc/passwd | cut -d ":" -f 3 | grep "^1...$" | sort
 ARG USER_UID
 ENV USER_UID=${USER_UID:-1234}
 RUN groupadd -g ${USER_UID} docker \
-    && useradd docker -u ${USER_UID} -g ${USER_UID} -G sudo -m -s /bin/bash \
+    && useradd docker -u ${USER_UID} -G docker,sudo -m -s /bin/bash \
     && echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
 
 RUN apt-get update
