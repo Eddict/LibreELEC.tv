@@ -74,7 +74,7 @@ jobs:
             http = false
             mirrors = ["localhost"]
         cleanup: true
-        buildkitd-flags: '"--progress ''plain''"'
+#        buildkitd-flags: '"--progress ''plain''"'
 
     -
       name: Build and export to (local) registry
@@ -84,6 +84,7 @@ jobs:
         load: true
         tags: "${{ secrets.REGISTRY_FQDN }}/libreelec.noble"
         build-args: |
+          --progress=plain
           USER_UID=${{ steps.get-docker-guid.outputs.docker-guid }}
 #          DOCKER_BUILDKIT=0
         no-cache: false
