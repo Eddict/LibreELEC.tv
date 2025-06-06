@@ -71,11 +71,11 @@ jobs:
 #        buildkitd-flags: --debug
 
     -
-      name: Build and push to (local) registry
+      name: Build and export to (local) registry
       uses: docker/build-push-action@v6
       with:
         file: tools/docker/noble/Dockerfile
-        push: true
+        load: true
         tags: "${{ secrets.REGISTRY_FQDN }}/libreelec.noble"
         build-args: |
           BUILDKIT_PROGRESS=plain
@@ -84,3 +84,29 @@ jobs:
         # cache-to: type=registry,ref=${{vars.DOCKER_HUB_USERNAME}}/${{vars.DOCKER_HUB_IMAGE_NAME}}.1:buildcache,mode=max
         cache-from: type=local,src=/tmp/.buildx-cache
         cache-to: type=local,mode=max,dest=/tmp/.buildx-cache
+
+    - 
+      name: Build LibreELEC image
+      run: |
+        docker run --rm \
+          -log-driver journald \
+          --name buildLibreELEC.noble \
+          -v $PWD:/build \
+          -w /build \
+          -e MTIMMEDIATE=yes \
+          -e MTDEBUG=no \
+          -e MTVERBOSE=no \
+          -e MTPROGRESS=yes \
+          -e PROJECT=RPi \
+          -e DEVICE=RPi4 \
+          -e ARCH=aarch64 \
+          "${{ secrets.REGISTRY_FQDN }}/libreelec.noble" make image
+#docker run --log-driver journald --name buildLibreELEC.noble -v $PWD:/build -w /build -it -e MTIMMEDIATE=yes -e MTDEBUG=no -e MTVERBOSE=no -e MTPROGRESS=yes -e PROJECT=RPi -e DEVICE=RPi4 -e ARCH=aarch64 libreelec.noble make image
+
+    - 
+      name: Build and push
+      uses: docker/build-push-action@v6
+      with:
+        platforms: linux/amd64,linux/arm64
+        push: true
+        tags: "${{ secrets.REGISTRY_FQDN }}/libreelec.noble"
