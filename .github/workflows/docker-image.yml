@@ -79,7 +79,7 @@ jobs:
             http = false
             insecure = false
 #            mirrors = ["localhost"]
-        cleanup: true
+        cleanup: false
         buildkitd-flags: |
           --progress=plain
 
