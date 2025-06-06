@@ -18,16 +18,20 @@ ENV USER_UID=${USER_UID:-1234}
 RUN <<EOF
 # https://www.kevinguay.com/posts/next-uid-gid/
 newid=$(cat /etc/group /etc/passwd | cut -d ":" -f 3 | grep "^1...$" | sort -n | tail -n 1 | awk '{ print $1+1 }')
+echo ${newid}
 # do we have a group with same GID
 if groupname=$(getent group ${USER_UID}); then
-  groupmod -g ${newid} ${groupname}
+  echo ${groupname}
+  groupmod --gid ${newid} ${groupname}
 fi
 # do we have a user with same UID
 if username=$(getent passwd ${USER_UID}); then
-  usermod -u ${newid} ${username}
+  echo ${username}
+  usermod --uid ${newid} ${username}
 fi
-groupadd -g ${USER_UID} docker
-useradd docker -u ${USER_UID} -G docker,sudo -m -s /bin/bash
+#groupadd --gid ${USER_UID} docker
+#useradd docker --uid ${USER_UID} --no-user-group --groups docker,sudo --create-home --shell /bin/bash
+useradd docker --uid ${USER_UID} --user-group --groups sudo --create-home --shell /bin/bash
 echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
 EOF
 
