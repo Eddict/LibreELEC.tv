@@ -88,6 +88,7 @@ jobs:
     - 
       name: Build LibreELEC image
       run: |
+        docker login --username ${{ vars.DOCKERHUB_USERNAME }} --password ${{ secrets.DOCKERHUB_TOKEN }} && \
         docker run --rm \
           -log-driver journald \
           --name buildLibreELEC.noble \
