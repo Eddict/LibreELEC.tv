@@ -101,7 +101,7 @@ jobs:
           -e PROJECT=RPi \
           -e DEVICE=RPi4 \
           -e ARCH=aarch64 \
-          "${{ secrets.REGISTRY_FQDN }}/libreelec.noble make image"
+          "${{ secrets.REGISTRY_FQDN }}/libreelec.noble" make image
 #          "${{ secrets.REGISTRY_FQDN }}/libreelec.noble" make image
 #docker run --log-driver journald --name buildLibreELEC.noble -v $PWD:/build -w /build -it -e MTIMMEDIATE=yes -e MTDEBUG=no -e MTVERBOSE=no -e MTPROGRESS=yes -e PROJECT=RPi -e DEVICE=RPi4 -e ARCH=aarch64 libreelec.noble make image
 
