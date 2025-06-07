@@ -95,6 +95,8 @@ jobs:
 
     - 
       name: Build LibreELEC image
+      env: 
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
         chown -R docker:docker $PWD
         docker login --username ${{ vars.DOCKERHUB_USERNAME }} --password ${{ secrets.DOCKERHUB_TOKEN }}
