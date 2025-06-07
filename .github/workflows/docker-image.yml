@@ -120,9 +120,9 @@ jobs:
       name: Build and push
       uses: docker/build-push-action@v6
       with:
-        platforms: linux/amd64,linux/arm64
+        file: tools/docker/noble/Dockerfile
         push: true
-        tags: "${{ secrets.REGISTRY_FQDN }}/libreelec.noble"
+        tags: eddict/libreelec.noble #"${{ secrets.REGISTRY_FQDN }}/libreelec.noble"
         no-cache: false
         cache-from: type=local,src=/tmp/.buildx-cache
         cache-to: type=local,mode=max,dest=/tmp/.buildx-cache
