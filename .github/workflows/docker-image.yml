@@ -12,7 +12,7 @@ jobs:
 #    runs-on: github
     runs-on: self-hosted
     env:
-      BUILDKIT_PROGRESS: 'auto' #'plain'
+      BUILDKIT_PROGRESS: 'auto' #'plain' 'quiet'
     steps:
     - 
       name: Get Date
@@ -94,6 +94,29 @@ jobs:
         cache-to: type=local,mode=max,dest=/tmp/.buildx-cache
 
     - 
+      name: Set permissions
+      run: |
+        chown -R docker:docker $PWD
+        docker login --username ${{ vars.DOCKERHUB_USERNAME }} --password ${{ secrets.DOCKERHUB_TOKEN }}
+
+    - uses: addnab/docker-run-action@v3
+      with:
+        image: "${{ secrets.REGISTRY_FQDN }}/libreelec.noble"
+        options: |
+          -v $PWD:/build
+          -e MTIMMEDIATE=yes
+          -e MTDEBUG=no
+          -e MTVERBOSE=no
+          -e MTPROGRESS=no
+          -e PROJECT=RPi
+          -e DEVICE=RPi4
+          -e ARCH=aarch64
+          -e BUILDER_NAME=Eddict
+          -e BUILDER_VERSION="13.0-$(date +%Y%m%d)"
+        run: |
+          make image
+
+    - 
       name: Build LibreELEC image
       run: |
         chown -R docker:docker . && \
@@ -110,6 +133,8 @@ jobs:
           -e PROJECT=RPi \
           -e DEVICE=RPi4 \
           -e ARCH=aarch64 \
+          -e BUILDER_NAME=Eddict \
+          -e BUILDER_VERSION="13.0-$(date +%Y%m%d)" \
           "${{ secrets.REGISTRY_FQDN }}/libreelec.noble" make image
 
     - 
