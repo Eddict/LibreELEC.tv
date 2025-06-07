@@ -108,7 +108,7 @@ jobs:
           -e MTIMMEDIATE=yes \
           -e MTDEBUG=no \
           -e MTVERBOSE=no \
-          -e MTPROGRESS=no \
+          -e MTPROGRESS=yes \
           -e PROJECT=RPi \
           -e DEVICE=RPi4 \
           -e ARCH=aarch64 \
