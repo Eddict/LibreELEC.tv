@@ -12,7 +12,7 @@ jobs:
 #    runs-on: github
     runs-on: self-hosted
     env:
-      BUILDKIT_PROGRESS: 'quiet' #'plain' 'quiet'
+      BUILDKIT_PROGRESS: 'auto' #'plain' 'quiet'
     steps:
     - 
       name: Get Date
