@@ -12,7 +12,7 @@ jobs:
 #    runs-on: github
     runs-on: self-hosted
     env:
-      BUILDKIT_PROGRESS: 'plain'
+      BUILDKIT_PROGRESS: 'auto' #'plain'
     steps:
     - 
       name: Get Date
@@ -69,7 +69,7 @@ jobs:
       with:
         # https://github.com/moby/buildkit/blob/master/docs/buildkitd.toml.md
         buildkitd-config-inline: |
-          debug = true
+          debug = false
           [registry."${{ secrets.REGISTRY_FQDN }}"]
             http = false
             mirrors = ["localhost"]
@@ -84,8 +84,8 @@ jobs:
         load: true
         tags: "${{ secrets.REGISTRY_FQDN }}/libreelec.noble"
         build-args: |
-          --progress=plain
           USER_UID=${{ steps.get-docker-guid.outputs.docker-guid }}
+#          --progress=plain
 #          DOCKER_BUILDKIT=0
         no-cache: false
         # cache-from: type=registry,ref=${{ vars.DOCKER_HUB_USERNAME }}/${{ vars.DOCKER_HUB_IMAGE_NAME }}.1:buildcache
