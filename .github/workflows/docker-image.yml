@@ -101,7 +101,8 @@ jobs:
 
     - uses: addnab/docker-run-action@v3
       with:
-        image: "${{ secrets.REGISTRY_FQDN }}/libreelec.noble"
+        registry: ${{ secrets.REGISTRY_FQDN }}
+        image: "libreelec.noble"
         options: |
           -v $PWD:/build
           -e MTIMMEDIATE=yes
