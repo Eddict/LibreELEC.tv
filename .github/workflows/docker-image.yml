@@ -96,6 +96,7 @@ jobs:
     - 
       name: Set permissions
       run: |
+        env
         chown -R docker:docker $PWD
         docker login --username ${{ vars.DOCKERHUB_USERNAME }} --password ${{ secrets.DOCKERHUB_TOKEN }}
 
