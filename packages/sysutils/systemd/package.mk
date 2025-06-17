@@ -3,8 +3,8 @@
 # Copyright (C) 2018-present Team LibreELEC (https://libreelec.tv)
 
 PKG_NAME="systemd"
-PKG_VERSION="257.5"
-PKG_SHA256="4d65f9482608cf9f7823df42a6d7796f0e0dfcfb94301df75effff86d40da33e"
+PKG_VERSION="257.6"
+PKG_SHA256="1ac656c61e595cc6e653883d554caadd2053f323d9065c0daff69f83368b120c"
 PKG_LICENSE="LGPL2.1+"
 PKG_SITE="http://www.freedesktop.org/wiki/Software/systemd"
 PKG_URL="https://github.com/systemd/systemd/archive/v${PKG_VERSION}.tar.gz"
@@ -12,10 +12,7 @@ PKG_DEPENDS_TARGET="meson:host ninja:host gcc:host libcap kmod util-linux entrop
 PKG_LONGDESC="A system and session manager for Linux, compatible with SysV and LSB init scripts."
 
 PKG_MESON_OPTS_TARGET="--libdir=/usr/lib \
-                       -Drootprefix=/usr \
-                       -Dsplit-usr=false \
                        -Dsplit-bin=true \
-                       -Ddefault-hierarchy=unified \
                        -Dtty-gid=5 \
                        -Dtests=false \
                        -Dseccomp=disabled \
