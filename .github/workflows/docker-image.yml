@@ -122,7 +122,7 @@ jobs:
       with:
         file: tools/docker/noble/Dockerfile
         push: true
-        tags: eddict/libreelec.noble #"${{ secrets.REGISTRY_FQDN }}/libreelec.noble"
+        tags: "${{ secrets.REGISTRY_FQDN }}/eddict/libreelec.noble" #"${{ secrets.REGISTRY_FQDN }}/libreelec.noble"
         no-cache: false
         cache-from: type=local,src=/tmp/.buildx-cache
         cache-to: type=local,mode=max,dest=/tmp/.buildx-cache
