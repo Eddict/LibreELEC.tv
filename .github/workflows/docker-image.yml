@@ -101,11 +101,13 @@ jobs:
         chown -R docker:docker $PWD
         docker login --username ${{ vars.DOCKERHUB_USERNAME }} --password ${{ secrets.DOCKERHUB_TOKEN }}
         docker run --rm \
-          --log-driver local \
+          --log-driver none \
           --name "buildLibreELEC.noble" \
           -v $PWD:/build \
           -w /build \
-          -e MTIMMEDIATE=yes \
+          -e DISABLE_COLORS=yes \
+          -e LOGCOMBINE=fail \
+          -e MTIMMEDIATE=no \
           -e MTDEBUG=no \
           -e MTVERBOSE=no \
           -e MTPROGRESS=yes \
