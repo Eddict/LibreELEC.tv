@@ -103,6 +103,7 @@ jobs:
           -e MTDEBUG=no \
           -e MTVERBOSE=no \
           -e MTPROGRESS=yes \
+          -e DISTRO=EddictwareELEC \
           -e PROJECT=RPi \
           -e DEVICE=RPi4 \
           -e ARCH=aarch64 \
