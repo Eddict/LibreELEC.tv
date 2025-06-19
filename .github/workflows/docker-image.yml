@@ -69,7 +69,7 @@ jobs:
       with:
         file: tools/docker/noble/Dockerfile
         load: true
-        tags: eddict/EddictwareELEC.noble
+        tags: eddict/eddictwareelec.noble
         build-args: |
           USER_UID=${{ steps.get-docker-guid.outputs.docker-guid }}
 #          --progress=plain
@@ -103,7 +103,7 @@ jobs:
           -e ARCH=aarch64 \
           -e BUILDER_NAME=Eddict \
           -e BUILDER_VERSION="13.0-$(date +%Y%m%d)" \
-          "${{ secrets.REGISTRY_FQDN }}/EddictwareELEC.noble" make image
+          "${{ secrets.REGISTRY_FQDN }}/eddictwareelec.noble" make image
 
     - 
       name: Build and push to (local/private) registry
@@ -111,7 +111,7 @@ jobs:
       with:
         file: tools/docker/noble/Dockerfile
         push: true
-        tags: "${{ secrets.REGISTRY_FQDN }}/eddict/EddictwareELEC.noble"
+        tags: "${{ secrets.REGISTRY_FQDN }}/eddict/eddictwareelec.noble"
         no-cache: false
         cache-from: type=local,src=/tmp/.buildx-cache
         cache-to: type=local,mode=max,dest=/tmp/.buildx-cache
