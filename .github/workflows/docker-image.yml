@@ -103,7 +103,7 @@ jobs:
           -e ARCH=aarch64 \
           -e BUILDER_NAME=Eddict \
           -e BUILDER_VERSION="13.0-$(date +%Y%m%d)" \
-          "${{ secrets.REGISTRY_FQDN }}/eddictwareelec.noble" make image
+          "${{ secrets.REGISTRY_FQDN }}/eddict/eddictwareelec.noble" make image
 
     - 
       name: Build and push to (local/private) registry
