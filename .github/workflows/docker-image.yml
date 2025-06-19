@@ -63,6 +63,12 @@ jobs:
         cleanup: true
 #        buildkitd-flags: '"--progress ''plain''"'
 
+    - name: ccache
+      uses: hendrikmuhs/ccache-action@v1.2
+      with:
+        create-symlink: true
+        max-size: 10G
+
     -
       name: Build and export to (local/private) registry
       uses: docker/build-push-action@v6
