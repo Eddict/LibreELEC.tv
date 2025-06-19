@@ -1,14 +1,15 @@
-# EddictwareELEC – LibreELEC unleashed by Eddict
+# EddictwareELEC – LibreELEC unleashed
 
-EddictwareELEC is [my](https://github.com/Eddict) version of LibreELEC with Entware pre-installed on the LibreELEC image.
+![EddictwareELEC logo](https://eddict.nl/images/EddictwareELEC_64_transparent.png) EddictwareELEC is [Eddict's](https://github.com/Eddict) version of LibreELEC with Entware pre-installed on the LibreELEC image.
 
-## Entware
+### Entware
 
 [Entware](https://entware.net) is a software repository for embedded devices which use the Linux kernel, such as routers and network-attached storage (NAS) devices. Further information on the project can be found on their [Github page](https://github.com/Entware).
 
-## LibreELEC
+### LibreELEC
 
 LibreELEC is a 'Just enough OS' Linux distribution for the award-winning [Kodi](https://kodi.tv) software on popular mediacentre hardware. Further information on the project can be found on the [LibreELEC website](https://libreelec.tv).
+
 
 **Issues & Support**
 
@@ -28,4 +29,4 @@ EddictwareELEC original code is released under [GPLv2](https://www.gnu.org/licen
 
 **Copyright**
 
-As EddictwareELEC is forked from LibreELE it has many copyright owners; notably [LibreELEC](https://libreelec.tv), [OpenELEC](https://openelec.tv) and [OpenBricks/GeeXboX](https://github.com/OpenBricks/openbricks/blob/master/AUTHORS) the uncredited source of the original 2009 build system. EddictwareELEC makes no claim of copyright on any upstream code. However all original EddictwareELEC authored code is copyright Eddict.nl. Patches to upstream code have the same license as the upstream project unless specified otherwise. For a complete copyright list please checkout the source code to examine license headers. Unless expressly stated otherwise all code submitted to the LibreELEC project (in any form) is licensed under [GPLv2](https://www.gnu.org/licenses/gpl-2.0.html) and copyright is donated to the project. This approach gives the project freedom to maintain the code without the overhead of preserving contact with every submitter, e.g. GPLv3. You are free to retain copyright by adding your copyright header to each submitted code page. If you submit code that is not your own work it is your responsibility to place a header stating the copyright.
+As EddictwareELEC is forked from LibreELEC it has many copyright owners; notably [LibreELEC](https://libreelec.tv), [OpenELEC](https://openelec.tv) and [OpenBricks/GeeXboX](https://github.com/OpenBricks/openbricks/blob/master/AUTHORS) the uncredited source of the original 2009 build system. EddictwareELEC makes no claim of copyright on any upstream code. However all original EddictwareELEC authored code is copyright Eddict.nl. Patches to upstream code have the same license as the upstream project unless specified otherwise. For a complete copyright list please checkout the source code to examine license headers. Unless expressly stated otherwise all code submitted to the LibreELEC project (in any form) is licensed under [GPLv2](https://www.gnu.org/licenses/gpl-2.0.html) and copyright is donated to the project. This approach gives the project freedom to maintain the code without the overhead of preserving contact with every submitter, e.g. GPLv3. You are free to retain copyright by adding your copyright header to each submitted code page. If you submit code that is not your own work it is your responsibility to place a header stating the copyright.
