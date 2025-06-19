@@ -1,4 +1,4 @@
-name: Build Container for building LibreELEC images
+name: Build Container for building EddictwareELEC images
 
 on:
   workflow_dispatch:
@@ -82,7 +82,7 @@ jobs:
       with:
         file: tools/docker/noble/Dockerfile
         load: true
-        tags: eddict/libreelec.noble
+        tags: eddict/EddictwareELEC.noble
         build-args: |
           USER_UID=${{ steps.get-docker-guid.outputs.docker-guid }}
 #          --progress=plain
@@ -94,7 +94,7 @@ jobs:
         cache-to: type=local,mode=max,dest=/tmp/.buildx-cache
 
     - 
-      name: Build LibreELEC image
+      name: Build EddictwareELEC image
       env: 
         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
@@ -102,7 +102,7 @@ jobs:
         docker login --username ${{ vars.DOCKERHUB_USERNAME }} --password ${{ secrets.DOCKERHUB_TOKEN }}
         docker run --rm \
           --log-driver none \
-          --name "buildLibreELEC.noble" \
+          --name "buildEddictwareELEC.noble" \
           -v $PWD:/build \
           -w /build \
           -e DISABLE_COLORS=yes \
@@ -116,7 +116,7 @@ jobs:
           -e ARCH=aarch64 \
           -e BUILDER_NAME=Eddict \
           -e BUILDER_VERSION="13.0-$(date +%Y%m%d)" \
-          "${{ secrets.REGISTRY_FQDN }}/libreelec.noble" make image
+          "${{ secrets.REGISTRY_FQDN }}/EddictwareELEC.noble" make image
 
     - 
       name: Build and push
@@ -124,7 +124,7 @@ jobs:
       with:
         file: tools/docker/noble/Dockerfile
         push: true
-        tags: "${{ secrets.REGISTRY_FQDN }}/eddict/libreelec.noble" #"${{ secrets.REGISTRY_FQDN }}/libreelec.noble"
+        tags: "${{ secrets.REGISTRY_FQDN }}/eddict/EddictwareELEC.noble"
         no-cache: false
         cache-from: type=local,src=/tmp/.buildx-cache
         cache-to: type=local,mode=max,dest=/tmp/.buildx-cache
