@@ -2,6 +2,8 @@
 
 ![EddictwareELEC logo](https://eddict.nl/images/EddictwareELEC/EddictwareELEC_64_transparent.png) **EddictwareELEC** is [Eddict's](https://github.com/Eddict) version of LibreELEC with Entware pre-installed on the LibreELEC image.
 
+*This is still work in progress, started May 2025. So far it will only create the needed /opt folder and adds the 99-opkg.conf file to the /etc/system/profile.d folder to make sure Entware will be started, updated and upgraded at boot.*
+
 ---
 ### Entware
 
