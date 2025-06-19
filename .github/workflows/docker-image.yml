@@ -63,7 +63,7 @@ jobs:
         cleanup: true
 #        buildkitd-flags: '"--progress ''plain''"'
 
-    - name: ccache
+    - name: Ccache for gh actions
       uses: hendrikmuhs/ccache-action@v1.2
       with:
         max-size: 10G
