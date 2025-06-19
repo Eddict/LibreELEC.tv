@@ -63,11 +63,6 @@ jobs:
         cleanup: true
 #        buildkitd-flags: '"--progress ''plain''"'
 
-    - name: Ccache for gh actions
-      uses: hendrikmuhs/ccache-action@v1.2
-      with:
-        max-size: 10G
-
     -
       name: Build and export to (local/private) registry
       uses: docker/build-push-action@v6
@@ -84,6 +79,11 @@ jobs:
         # cache-to: type=registry,ref=${{ vars.DOCKER_HUB_USERNAME }}/${{ vars.DOCKER_HUB_IMAGE_NAME }}.1:buildcache,mode=max
         cache-from: type=local,src=/tmp/.buildx-cache
         cache-to: type=local,mode=max,dest=/tmp/.buildx-cache
+
+    - name: Ccache for gh actions
+      uses: hendrikmuhs/ccache-action@v1.2
+      with:
+        max-size: 10G
 
     - 
       name: Build EddictwareELEC image
