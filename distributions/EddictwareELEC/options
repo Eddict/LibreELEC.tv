@@ -8,7 +8,7 @@
 
 # Distribution Source location
   DISTRO_MIRROR=""
-  DISTRO_SRC="https://github.com/Eddict/LibreELEC.tv"
+  DISTRO_SRC="https://sources.libreelec.tv/$DISTRO_VERSION"
 
 # Distribution Home URL
   DISTRO_HOME_URL="https://github.com/Eddict/LibreELEC.tv"
