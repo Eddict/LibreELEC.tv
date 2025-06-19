@@ -7,7 +7,7 @@
   DESCRIPTION="EddictwareELEC is an Entware enabled fast and user-friendly Kodi Entertainment Center distribution."
 
 # Distribution Source location
-  DISTRO_MIRROR=""
+  DISTRO_MIRROR="https://sources.libreelec.tv/mirror"
   DISTRO_SRC="https://sources.libreelec.tv/$DISTRO_VERSION"
 
 # Distribution Home URL
