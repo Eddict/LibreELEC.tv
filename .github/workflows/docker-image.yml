@@ -118,7 +118,7 @@ jobs:
         docker login --username ${{ vars.DOCKERHUB_USERNAME }} --password ${{ secrets.DOCKERHUB_TOKEN }}
         if [ "$(docker ps -aq -f status=exited -f name=build${{ env.EE_Distro }}.${{ env.DistroCodeName }})" ]; then
             # cleanup
-            docker rm --force --volumes "build$${{ env.EE_Distro }}.${{ env.DistroCodeName }}"
+            docker rm --force --volumes "build${{ env.EE_Distro }}.${{ env.DistroCodeName }}"
         fi
         # run the container
         docker run --rm \
