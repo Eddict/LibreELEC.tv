@@ -114,26 +114,33 @@ jobs:
       env: 
         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
-        chown -R docker:docker $PWD
-        docker login --username ${{ vars.DOCKERHUB_USERNAME }} --password ${{ secrets.DOCKERHUB_TOKEN }}
-        docker run --rm \
-          --log-driver none \
-          --name "build${EE_Distro}.${DistroCodeName}" \
-          -v $PWD:/build \
-          -w /build \
-          -e DISABLE_COLORS=yes \
-          -e LOGCOMBINE=fail \
-          -e MTIMMEDIATE=no \
-          -e MTDEBUG=no \
-          -e MTVERBOSE=no \
-          -e MTPROGRESS=yes \
-          -e DISTRO=$Distro \
-          -e PROJECT=$Project \
-          -e DEVICE=$Device \
-          -e ARCH=$Arch \
-          -e BUILDER_NAME=Eddict \
-          -e BUILDER_VERSION="13.0-$(date +%Y%m%d)" \
-          "${{ secrets.REGISTRY_FQDN }}/${{ steps.compose-image-tag.outputs.EE_Distro_tag }}" make image
+        if [ ! "$(docker ps -a -q -f name=build${EE_Distro}.${DistroCodeName})" ]; then
+          chown -R docker:docker $PWD
+          docker login --username ${{ vars.DOCKERHUB_USERNAME }} --password ${{ secrets.DOCKERHUB_TOKEN }}
+          if [ "$(docker ps -aq -f status=exited -f name=build${EE_Distro}.${DistroCodeName})" ]; then
+              # cleanup
+              docker rm "build${EE_Distro}.${DistroCodeName}"
+          fi
+          # run the container
+          docker run --rm \
+            --log-driver none \
+            --name "build${EE_Distro}.${DistroCodeName}" \
+            -v $PWD:/build \
+            -w /build \
+            -e DISABLE_COLORS=yes \
+            -e LOGCOMBINE=fail \
+            -e MTIMMEDIATE=no \
+            -e MTDEBUG=no \
+            -e MTVERBOSE=no \
+            -e MTPROGRESS=yes \
+            -e DISTRO=$Distro \
+            -e PROJECT=$Project \
+            -e DEVICE=$Device \
+            -e ARCH=$Arch \
+            -e BUILDER_NAME=Eddict \
+            -e BUILDER_VERSION="13.0-$(date +%Y%m%d)" \
+            "${{ secrets.REGISTRY_FQDN }}/${{ steps.compose-image-tag.outputs.EE_Distro_tag }}" make image
+        fi
 
     - 
       name: Copy the built EddictwareELEC image to artifacts
