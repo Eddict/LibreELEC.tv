@@ -110,21 +110,21 @@ jobs:
     #     max-size: 10G
 
     - 
-      name: Build EddictwareELEC image
+      name: Build ${{ env.EE_Distro }} image
       env: 
         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
-        if [ ! "$(docker ps -a -q -f name=build${EE_Distro}.${DistroCodeName})" ]; then
+        if [ ! "$(docker ps -a -q -f name=build${{ env.EE_Distro }}.${{ env.DistroCodeName }})" ]; then
           chown -R docker:docker $PWD
           docker login --username ${{ vars.DOCKERHUB_USERNAME }} --password ${{ secrets.DOCKERHUB_TOKEN }}
-          if [ "$(docker ps -aq -f status=exited -f name=build${EE_Distro}.${DistroCodeName})" ]; then
+          if [ "$(docker ps -aq -f status=exited -f name=build${{ env.EE_Distro }}.${{ env.DistroCodeName }})" ]; then
               # cleanup
-              docker rm "build${EE_Distro}.${DistroCodeName}"
+              docker rm "build$${{ env.EE_Distro }}.${{ env.DistroCodeName }}"
           fi
           # run the container
           docker run --rm \
             --log-driver none \
-            --name "build${EE_Distro}.${DistroCodeName}" \
+            --name "build${{ env.EE_Distro }}.${{ env.DistroCodeName }}" \
             -v $PWD:/build \
             -w /build \
             -e DISABLE_COLORS=yes \
@@ -133,9 +133,9 @@ jobs:
             -e MTDEBUG=no \
             -e MTVERBOSE=no \
             -e MTPROGRESS=yes \
-            -e DISTRO=$Distro \
-            -e PROJECT=$Project \
-            -e DEVICE=$Device \
+            -e DISTRO=${{ env.EE_Distro }} \
+            -e PROJECT=${{ env.EE_Project }} \
+            -e DEVICE=${{ env.EE_Device }} \
             -e ARCH=$Arch \
             -e BUILDER_NAME=Eddict \
             -e BUILDER_VERSION="13.0-$(date +%Y%m%d)" \
@@ -143,7 +143,7 @@ jobs:
         fi
 
     - 
-      name: Copy built EddictwareELEC image to artifacts
+      name: Copy built ${{ env.EE_Distro }} image to artifacts
       run: |
         lines=$(find ./target -maxdepth 1 -type f -iname "${Distro}-${Device}.${Arch}*.img.gz" | wc -l)
         if [ $lines -eq 0 ]; then
