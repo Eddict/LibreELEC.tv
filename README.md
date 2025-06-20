@@ -24,7 +24,7 @@ Entware: There is no any central forum for Entware users, different devices are 
 
 **Donations**
 
-Contributions towards current project funding goals can be made via [PayPal](https://paypal.me/Eddict).
+Contributions towards current project funding goals can be made via [PayPal](https://paypal.me/Eddict?message=Sponsoring+EddictwareELEC+project).
 
 **License**
 
