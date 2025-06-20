@@ -58,14 +58,14 @@ jobs:
       # Ignore the failure of a step and avoid terminating the job.
       continue-on-error: true
 
-    # - 
-    #   name: Cache dependencies
-    #   uses: actions/cache@v3
-    #   with:
-    #     path: /tmp/.buildx-cache
-    #     key: ${{ runner.os }}-multi-buildx-${{ github.ref_name }}-${{ steps.get-date.outputs.date }} #${{ github.sha }} ${{ github.ref_name }}
-    #     restore-keys: |
-    #       ${{ runner.os }}-multi-buildx-${{ github.ref_name }}-
+    - 
+      name: Cache dependencies
+      uses: actions/cache@v3
+      with:
+        path: /tmp/.buildx-cache
+        key: ${{ runner.os }}-buildx-${{ github.ref_name }}-${{ steps.get-date.outputs.date }} #${{ github.sha }} ${{ github.ref_name }}
+        restore-keys: |
+          ${{ runner.os }}-buildx-${{ github.ref_name }}-
 
     - name: Log in to (local/private) registry
       uses: docker/login-action@v3
@@ -101,8 +101,8 @@ jobs:
         no-cache: false
         # cache-from: type=registry,ref=${{ vars.DOCKER_HUB_USERNAME }}/${{ vars.DOCKER_HUB_IMAGE_NAME }}.1:buildcache
         # cache-to: type=registry,ref=${{ vars.DOCKER_HUB_USERNAME }}/${{ vars.DOCKER_HUB_IMAGE_NAME }}.1:buildcache,mode=max
-        # cache-from: type=local,src=/tmp/.buildx-cache
-        # cache-to: type=local,mode=max,dest=/tmp/.buildx-cache
+        cache-from: type=local,src=/tmp/.buildx-cache
+        cache-to: type=local,mode=max,dest=/tmp/.buildx-cache
 
     # - name: Ccache for gh actions
     #   uses: hendrikmuhs/ccache-action@v1.2
@@ -149,12 +149,16 @@ jobs:
     - 
       name: Copy built ${{ env.EE_Distro }} image to artifacts
       run: |
-        lines=$(find ./target -maxdepth 1 -type f -iname "${{ env.EE_Distro }}-${{ env.EE_Device }}.${{ env.EE_Arch }}*.img.gz" 2>/dev/null | wc -l)
-        if [ $lines -ne 0 ]; then
-          filename=$(ls -t "./target/${{ env.EE_Distro }}-${{ env.EE_Device }}.${{ env.EE_Arch }}*.img.gz" | tail --lines=1)
-          echo $filename
-          mkdir --parents "./target_archive"
-          cp --update=none "$filename" "./target_archive"
+        if [ -d ./target ]; then
+          lines=$(find ./target -maxdepth 1 -type f -iname "${{ env.EE_Distro }}-${{ env.EE_Device }}.${{ env.EE_Arch }}*.img.gz" 2>/dev/null | wc -l)
+          if [ $lines -ne 0 ]; then
+            filename=$(ls -t "./target/${{ env.EE_Distro }}-${{ env.EE_Device }}.${{ env.EE_Arch }}*.img.gz" | tail --lines=1)
+            echo $filename
+            if [ ! -d ./target_archive ]; then
+              mkdir --parents "./target_archive"
+            fi
+            cp --update=none "$filename" "./target_archive"
+          fi
         fi
 
     - 
@@ -165,5 +169,5 @@ jobs:
         push: true
         tags: "${{ secrets.REGISTRY_FQDN }}/${{ steps.compose-image-tag.outputs.EE_Distro_tag }}"
         no-cache: false
-        # cache-from: type=local,src=/tmp/.buildx-cache
-        # cache-to: type=local,mode=max,dest=/tmp/.buildx-cache
+        cache-from: type=local,src=/tmp/.buildx-cache
+        cache-to: type=local,mode=max,dest=/tmp/.buildx-cache
