@@ -43,7 +43,7 @@ jobs:
       shell: bash
 
     -
-      name: Build the Docker image
+      name: Build Docker image
       uses: actions/checkout@v4
       with:
         ref: 'master-entw'
@@ -143,12 +143,15 @@ jobs:
         fi
 
     - 
-      name: Copy the built EddictwareELEC image to artifacts
+      name: Copy built EddictwareELEC image to artifacts
       run: |
-        filename=$(ls -t "./target/${Distro}-${Device}.${Arch}*.img.gz" | tail -n 1)
-        echo "built_image=$filename" >> $GITHUB_OUTPUT
-        mkdir -p "./target_archive"
-        cp -n "$filename" "./target_archive"
+        lines=$(find ./target -maxdepth 1 -type f -iname "${Distro}-${Device}.${Arch}*.img.gz" | wc -l)
+        if [ $lines -eq 0 ]; then
+          filename=$(ls -t "./target/${Distro}-${Device}.${Arch}*.img.gz" | tail --lines=1)
+          echo "built_image=$filename" >> $GITHUB_OUTPUT
+          mkdir --parents "./target_archive"
+          cp --update=none "$filename" "./target_archive"
+        fi
 
     - 
       name: Build and push to (local/private) registry
