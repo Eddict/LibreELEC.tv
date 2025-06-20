@@ -37,7 +37,7 @@ jobs:
 
     - 
       name: Lowercase EE_Distro value as tags cannot contain uppercase letters
-      id: lower-repo
+      id: lower-ee_distro
       run: |
         echo "EE_Distro_tag=eddict/${EE_Distro@L}.${DistroCodeName}" >> $GITHUB_OUTPUT
       shell: bash
@@ -93,7 +93,7 @@ jobs:
       with:
         file: tools/docker/$DistroCodeName/Dockerfile
         load: true
-        tags: $EE_Distro_tag
+        tags: ${{ steps.lower-ee_distro.outputs.EE_Distro_tag }}
         build-args: |
           USER_UID=${{ steps.get-docker-guid.outputs.docker-guid }}
 #          --progress=plain
@@ -133,7 +133,7 @@ jobs:
           -e ARCH=$Arch \
           -e BUILDER_NAME=Eddict \
           -e BUILDER_VERSION="13.0-$(date +%Y%m%d)" \
-          "${{ secrets.REGISTRY_FQDN }}/${EE_Distro_tag}" make image
+          "${{ secrets.REGISTRY_FQDN }}/${{ steps.lower-ee_distro.outputs.EE_Distro_tag }}" make image
 
     - 
       name: Copy the built EddictwareELEC image to artifacts
@@ -149,7 +149,7 @@ jobs:
       with:
         file: tools/docker/${DistroCodeName}/Dockerfile
         push: true
-        tags: "${{ secrets.REGISTRY_FQDN }}/${EE_Distro_tag}"
+        tags: "${{ secrets.REGISTRY_FQDN }}/${{ steps.lower-ee_distro.outputs.EE_Distro_tag }}"
         no-cache: false
         # cache-from: type=local,src=/tmp/.buildx-cache
         # cache-to: type=local,mode=max,dest=/tmp/.buildx-cache
