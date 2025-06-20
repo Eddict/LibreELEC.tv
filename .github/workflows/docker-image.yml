@@ -141,12 +141,18 @@ jobs:
           "${{ secrets.REGISTRY_FQDN }}/${{ steps.compose-image-tag.outputs.EE_Distro_tag }}" make image
 
     - 
+      name: Debug information for next step
+      run: |
+        echo $(pwd)
+        echo $(ls -al)
+
+    - 
       name: Copy built ${{ env.EE_Distro }} image to artifacts
       run: |
         lines=$(find ./target -maxdepth 1 -type f -iname "${{ env.EE_Distro }}-${{ env.EE_Device }}.${{ env.EE_Arch }}*.img.gz" 2>/dev/null | wc -l)
         if [ $lines -ne 0 ]; then
           filename=$(ls -t "./target/${{ env.EE_Distro }}-${{ env.EE_Device }}.${{ env.EE_Arch }}*.img.gz" | tail --lines=1)
-          echo "built_image=$filename" >> $GITHUB_OUTPUT
+          echo $filename
           mkdir --parents "./target_archive"
           cp --update=none "$filename" "./target_archive"
         fi
