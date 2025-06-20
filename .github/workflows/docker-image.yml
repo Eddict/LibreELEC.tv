@@ -114,33 +114,31 @@ jobs:
       env: 
         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
-        if [ ! "$(docker ps -a -q -f name=build${{ env.EE_Distro }}.${{ env.DistroCodeName }})" ]; then
-          chown -R docker:docker $PWD
-          docker login --username ${{ vars.DOCKERHUB_USERNAME }} --password ${{ secrets.DOCKERHUB_TOKEN }}
-          if [ "$(docker ps -aq -f status=exited -f name=build${{ env.EE_Distro }}.${{ env.DistroCodeName }})" ]; then
-              # cleanup
-              docker rm "build$${{ env.EE_Distro }}.${{ env.DistroCodeName }}"
-          fi
-          # run the container
-          docker run --rm \
-            --log-driver none \
-            --name "build${{ env.EE_Distro }}.${{ env.DistroCodeName }}" \
-            -v $PWD:/build \
-            -w /build \
-            -e DISABLE_COLORS=yes \
-            -e LOGCOMBINE=fail \
-            -e MTIMMEDIATE=no \
-            -e MTDEBUG=no \
-            -e MTVERBOSE=no \
-            -e MTPROGRESS=yes \
-            -e DISTRO=${{ env.EE_Distro }} \
-            -e PROJECT=${{ env.EE_Project }} \
-            -e DEVICE=${{ env.EE_Device }} \
-            -e ARCH=$Arch \
-            -e BUILDER_NAME=Eddict \
-            -e BUILDER_VERSION="13.0-$(date +%Y%m%d)" \
-            "${{ secrets.REGISTRY_FQDN }}/${{ steps.compose-image-tag.outputs.EE_Distro_tag }}" make image
+        chown -R docker:docker $PWD
+        docker login --username ${{ vars.DOCKERHUB_USERNAME }} --password ${{ secrets.DOCKERHUB_TOKEN }}
+        if [ "$(docker ps -aq -f status=exited -f name=build${{ env.EE_Distro }}.${{ env.DistroCodeName }})" ]; then
+            # cleanup
+            docker rm --force --volumes "build$${{ env.EE_Distro }}.${{ env.DistroCodeName }}"
         fi
+        # run the container
+        docker run --rm \
+          --log-driver none \
+          --name "build${{ env.EE_Distro }}.${{ env.DistroCodeName }}" \
+          -v $PWD:/build \
+          -w /build \
+          -e DISABLE_COLORS=yes \
+          -e LOGCOMBINE=fail \
+          -e MTIMMEDIATE=no \
+          -e MTDEBUG=no \
+          -e MTVERBOSE=no \
+          -e MTPROGRESS=yes \
+          -e DISTRO=${{ env.EE_Distro }} \
+          -e PROJECT=${{ env.EE_Project }} \
+          -e DEVICE=${{ env.EE_Device }} \
+          -e ARCH=$Arch \
+          -e BUILDER_NAME=Eddict \
+          -e BUILDER_VERSION="13.0-$(date +%Y%m%d)" \
+          "${{ secrets.REGISTRY_FQDN }}/${{ steps.compose-image-tag.outputs.EE_Distro_tag }}" make image
 
     - 
       name: Copy built ${{ env.EE_Distro }} image to artifacts
