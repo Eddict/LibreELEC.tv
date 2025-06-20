@@ -91,7 +91,7 @@ jobs:
       name: Build and export to (local/private) registry
       uses: docker/build-push-action@v6
       with:
-        file: tools/docker/$DistroCodeName/Dockerfile
+        file: tools/docker/${{ env.DistroCodeName }}/Dockerfile
         load: true
         tags: ${{ steps.lower-ee_distro.outputs.EE_Distro_tag }}
         build-args: |
@@ -147,7 +147,7 @@ jobs:
       name: Build and push to (local/private) registry
       uses: docker/build-push-action@v6
       with:
-        file: tools/docker/${DistroCodeName}/Dockerfile
+        file: tools/docker/${{ env.DistroCodeName }}/Dockerfile
         push: true
         tags: "${{ secrets.REGISTRY_FQDN }}/${{ steps.lower-ee_distro.outputs.EE_Distro_tag }}"
         no-cache: false
