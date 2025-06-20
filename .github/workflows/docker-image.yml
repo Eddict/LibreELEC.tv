@@ -135,7 +135,7 @@ jobs:
           -e DISTRO=${{ env.EE_Distro }} \
           -e PROJECT=${{ env.EE_Project }} \
           -e DEVICE=${{ env.EE_Device }} \
-          -e ARCH=$Arch \
+          -e ARCH=${{ env.EE_Arch }} \
           -e BUILDER_NAME=Eddict \
           -e BUILDER_VERSION="13.0-$(date +%Y%m%d)" \
           "${{ secrets.REGISTRY_FQDN }}/${{ steps.compose-image-tag.outputs.EE_Distro_tag }}" make image
