@@ -7,6 +7,13 @@ on:
   pull_request:
     branches: [ "master-entw" ]
 
+env:
+  DistroCodeName: noble
+  EE_Distro: EddictwareELEC
+  EE_Project: RPi
+  EE_Device: RPi4
+  EE_Arch: aarch64
+
 jobs:
   build:
 #    runs-on: github
@@ -28,20 +35,37 @@ jobs:
         echo "docker-guid=$(id -u docker)" >> $GITHUB_OUTPUT
       shell: bash
 
+    - 
+      name: Lowercase EE_Distro value as tags cannot contain uppercase letters
+      id: lower-repo
+      run: |
+        echo "EE_Distro_tag=eddict/${EE_Distro@L}.${DistroCodeName}" >> $GITHUB_OUTPUT
+      shell: bash
+
     -
       name: Build the Docker image
       uses: actions/checkout@v4
       with:
         ref: 'master-entw'
 
+    # In this step, this action saves a list of existing images,
+    # the cache is created without them in the post run.
+    # It also restores the cache if it exists.
     - 
-      name: Cache dependencies
-      uses: actions/cache@v3
-      with:
-        path: /tmp/.buildx-cache
-        key: ${{ runner.os }}-multi-buildx-${{ github.ref_name }}-${{ steps.get-date.outputs.date }} #${{ github.sha }} ${{ github.ref_name }}
-        restore-keys: |
-          ${{ runner.os }}-multi-buildx-${{ github.ref_name }}-
+      name: Cache Docker layers
+#      uses: satackey/action-docker-layer-caching@v0.0.12
+      uses: jpribyl/action-docker-layer-caching@v0.1.1
+      # Ignore the failure of a step and avoid terminating the job.
+      continue-on-error: true
+
+    # - 
+    #   name: Cache dependencies
+    #   uses: actions/cache@v3
+    #   with:
+    #     path: /tmp/.buildx-cache
+    #     key: ${{ runner.os }}-multi-buildx-${{ github.ref_name }}-${{ steps.get-date.outputs.date }} #${{ github.sha }} ${{ github.ref_name }}
+    #     restore-keys: |
+    #       ${{ runner.os }}-multi-buildx-${{ github.ref_name }}-
 
     - name: Log in to (local/private) registry
       uses: docker/login-action@v3
@@ -59,7 +83,7 @@ jobs:
           debug = false
           [registry."${{ secrets.REGISTRY_FQDN }}"]
             http = false
-            mirrors = ["localhost"]
+        version: latest
         cleanup: true
 #        buildkitd-flags: '"--progress ''plain''"'
 
@@ -67,9 +91,9 @@ jobs:
       name: Build and export to (local/private) registry
       uses: docker/build-push-action@v6
       with:
-        file: tools/docker/noble/Dockerfile
+        file: tools/docker/$DistroCodeName/Dockerfile
         load: true
-        tags: eddict/eddictwareelec.noble
+        tags: $EE_Distro_tag
         build-args: |
           USER_UID=${{ steps.get-docker-guid.outputs.docker-guid }}
 #          --progress=plain
@@ -77,13 +101,13 @@ jobs:
         no-cache: false
         # cache-from: type=registry,ref=${{ vars.DOCKER_HUB_USERNAME }}/${{ vars.DOCKER_HUB_IMAGE_NAME }}.1:buildcache
         # cache-to: type=registry,ref=${{ vars.DOCKER_HUB_USERNAME }}/${{ vars.DOCKER_HUB_IMAGE_NAME }}.1:buildcache,mode=max
-        cache-from: type=local,src=/tmp/.buildx-cache
-        cache-to: type=local,mode=max,dest=/tmp/.buildx-cache
+        # cache-from: type=local,src=/tmp/.buildx-cache
+        # cache-to: type=local,mode=max,dest=/tmp/.buildx-cache
 
-    - name: Ccache for gh actions
-      uses: hendrikmuhs/ccache-action@v1.2
-      with:
-        max-size: 10G
+    # - name: Ccache for gh actions
+    #   uses: hendrikmuhs/ccache-action@v1.2
+    #   with:
+    #     max-size: 10G
 
     - 
       name: Build EddictwareELEC image
@@ -94,7 +118,7 @@ jobs:
         docker login --username ${{ vars.DOCKERHUB_USERNAME }} --password ${{ secrets.DOCKERHUB_TOKEN }}
         docker run --rm \
           --log-driver none \
-          --name "buildEddictwareELEC.noble" \
+          --name "build${EE_Distro}.${DistroCodeName}" \
           -v $PWD:/build \
           -w /build \
           -e DISABLE_COLORS=yes \
@@ -103,21 +127,29 @@ jobs:
           -e MTDEBUG=no \
           -e MTVERBOSE=no \
           -e MTPROGRESS=yes \
-          -e DISTRO=EddictwareELEC \
-          -e PROJECT=RPi \
-          -e DEVICE=RPi4 \
-          -e ARCH=aarch64 \
+          -e DISTRO=$Distro \
+          -e PROJECT=$Project \
+          -e DEVICE=$Device \
+          -e ARCH=$Arch \
           -e BUILDER_NAME=Eddict \
           -e BUILDER_VERSION="13.0-$(date +%Y%m%d)" \
-          "${{ secrets.REGISTRY_FQDN }}/eddict/eddictwareelec.noble" make image
+          "${{ secrets.REGISTRY_FQDN }}/${EE_Distro_tag}" make image
+
+    - 
+      name: Copy the built EddictwareELEC image to artifacts
+      run: |
+        filename=$(ls -t "./target/${Distro}-${Device}.${Arch}*.img.gz" | tail -n 1)
+        echo "built_image=$filename" >> $GITHUB_OUTPUT
+        mkdir -p "./target_archive"
+        cp -n "$filename" "./target_archive"
 
     - 
       name: Build and push to (local/private) registry
       uses: docker/build-push-action@v6
       with:
-        file: tools/docker/noble/Dockerfile
+        file: tools/docker/${DistroCodeName}/Dockerfile
         push: true
-        tags: "${{ secrets.REGISTRY_FQDN }}/eddict/eddictwareelec.noble"
+        tags: "${{ secrets.REGISTRY_FQDN }}/${EE_Distro_tag}"
         no-cache: false
-        cache-from: type=local,src=/tmp/.buildx-cache
-        cache-to: type=local,mode=max,dest=/tmp/.buildx-cache
+        # cache-from: type=local,src=/tmp/.buildx-cache
+        # cache-to: type=local,mode=max,dest=/tmp/.buildx-cache
