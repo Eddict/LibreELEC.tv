@@ -114,7 +114,7 @@ jobs:
       env: 
         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
-        echo $(pwd)
+        echo $PWD
         chown -R docker:docker $PWD
         docker login --username ${{ vars.DOCKERHUB_USERNAME }} --password ${{ secrets.DOCKERHUB_TOKEN }}
         if [ "$(docker ps -aq -f status=exited -f name=build${{ env.EE_Distro }}.${{ env.DistroCodeName }})" ]; then
@@ -145,21 +145,21 @@ jobs:
     - 
       name: Debug information for next step
       run: |
-        echo $(pwd)
+        echo $PWD
         echo $(ls -al)
 
     - 
       name: Copy built ${{ env.EE_Distro }} image to artifacts
       run: |
-        if [ -d ./target ]; then
-          lines=$(find ./target -maxdepth 1 -type f -iname "${{ env.EE_Distro }}-${{ env.EE_Device }}.${{ env.EE_Arch }}*.img.gz" 2>/dev/null | wc -l)
+        if [ -d /build/target ]; then
+          lines=$(find /build/target -maxdepth 1 -type f -iname "${{ env.EE_Distro }}-${{ env.EE_Device }}.${{ env.EE_Arch }}*.img.gz" 2>/dev/null | wc -l)
           if [ $lines -ne 0 ]; then
-            filename=$(ls -t "./target/${{ env.EE_Distro }}-${{ env.EE_Device }}.${{ env.EE_Arch }}*.img.gz" | tail --lines=1)
+            filename=$(ls -t "/build/target/${{ env.EE_Distro }}-${{ env.EE_Device }}.${{ env.EE_Arch }}*.img.gz" | tail --lines=1)
             echo $filename
-            if [ ! -d ./target_archive ]; then
-              mkdir --parents "./target_archive"
+            if [ ! -d /build/target_archive ]; then
+              mkdir --parents "/build/target_archive"
             fi
-            cp --update=none "$filename" "./target_archive"
+            cp --update=none "$filename" "/build/target_archive"
           fi
         fi
 
