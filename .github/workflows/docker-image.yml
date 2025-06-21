@@ -121,7 +121,7 @@ jobs:
             # cleanup
             docker rm --force --volumes "build${{ env.EE_Distro }}.${{ env.DistroCodeName }}"
         fi
-        exit 0
+        #exit 0
         # run the container
         docker run --rm \
           --log-driver none \
